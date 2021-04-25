@@ -5,7 +5,6 @@ find_package(Boost REQUIRED)
 set(REQUIRED_LIBS Core)
 set(REQUIRED_LIBS_QUALIFIED
         Qt5::Core
-        #        Boost
         )
 set(QT_VERSION 5)
 
@@ -15,22 +14,13 @@ if (EXISTS "$ENV{CLP_DIR}/googletest")
     add_subdirectory(${GTEST_DIR} GTESTBUILD)
 endif ()
 
-add_library(${PROJECT_NAME} STATIC
-        impl/HuffmanAlgorithm.hpp impl/HuffmanAlgorithm.cpp
-        )
-target_link_libraries(${PROJECT_NAME} PUBLIC
-        ${REQUIRED_LIBS_QUALIFIED}
-        )
-target_include_directories(${PROJECT_NAME} PUBLIC
-        impl
-        )
-set_target_properties(${PROJECT_NAME} PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
+set(${PROJECT_NAME}_INCLUDE_DIRS impl)
 
 if (GTEST_DIR)
     add_executable(${PROJECT_NAME}_test tests.cpp)
+    target_include_directories(${PROJECT_NAME}_test PUBLIC ${${PROJECT_NAME}_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME}_test PRIVATE
-            gtest_main ${PROJECT_NAME})
+            gtest_main ${REQUIRED_LIBS_QUALIFIED})
     set_target_properties(${PROJECT_NAME}_test PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 endif ()

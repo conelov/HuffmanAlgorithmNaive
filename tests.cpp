@@ -3,13 +3,24 @@
 //
 #include <HuffmanAlgorithm.hpp>
 #include <QBitArray>
-#include <QDebug>
 #include <gtest/gtest.h>
+
+#include <QDebug>
 
 TEST(HuffmanAlgorithm, _1)
 {
-  HuffmanAlgorithm h;
-  h.store("beep boop beer!");
-  for (auto const &[s, b] : h.table())
+  HuffmanAlgorithm<char> h;
+  h.store(std::string_view("beep boop beer!"));
+
+  for (auto const &[s, b] : h.table<QBitArray>())
     qDebug().nospace() << s << ' ' << b;
+
+//  qDebug() << ' ';
+  for (auto const &[s, b] : h.table<std::vector<bool>>()) {
+    auto out= qDebug().nospace();
+    out << s << ' ';
+    for (auto f : b) {
+      out << (f ? 1 : 0);
+    }
+  }
 }
